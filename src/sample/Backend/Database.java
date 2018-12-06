@@ -62,7 +62,7 @@ public class Database {
     private void printAutoData(Auto auto) {
         System.out.println("------------------------------------------");
         System.out.println("Registration Number Of The Car:" + auto.getRegistrationNumberOfTheCar());
-        System.out.println("Brand:" + auto.getBrand());
+        System.out.println("Brand:" + auto.getBRAND());
         System.out.println("Year Of Relese:" + auto.getYearOfRelease());
         System.out.println("Color:" + auto.getColor());
         System.out.println("Name Of The Owner:" + auto.getNameOfTheOwner());

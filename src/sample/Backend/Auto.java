@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class Auto {
     String registrationNumberOfTheCar;
-    String brand;
+    String BRAND;
     int yearOfRelease;
     String color;
     String nameOfTheOwner;
@@ -49,7 +49,7 @@ public class Auto {
 
     boolean setBrand(String newBrand) {
         if (Brand.isTrueBrand(newBrand)) {
-            this.brand = newBrand;
+            this.BRAND = newBrand;
             return true;
         } else
             System.out.println("Марка введена некорректно!");
@@ -119,36 +119,36 @@ public class Auto {
 
     @Override
     public String toString() {
-        return this.getBrand() + "\t" + this.getYearOfRelease();
+        return this.getBRAND() + "\t" + this.getYearOfRelease();
     }
 
     //endregion
     //region gett-еры
-    String getBrand() {
-        return this.brand;
+    public String getBRAND() {
+        return this.BRAND;
     }
 
-    String getRegistrationNumberOfTheCar() {
+    public String getRegistrationNumberOfTheCar() {
         return this.registrationNumberOfTheCar;
     }
 
-    int getYearOfRelease() {
+    public int getYearOfRelease() {
         return this.yearOfRelease;
     }
 
-    String getColor() {
+    public String getColor() {
         return this.color;
     }
 
-    String getNameOfTheOwner() {
+    public String getNameOfTheOwner() {
         return this.nameOfTheOwner;
     }
 
-    String getResidenceAddressOfTheOwner() {
+    public String getResidenceAddressOfTheOwner() {
         return this.residenceAddressOfTheOwner;
     }
 
-    String getCarType() {
+    public String getCarType() {
         return this.carType;
     }
 

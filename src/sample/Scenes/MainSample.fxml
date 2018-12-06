@@ -75,8 +75,9 @@
                         <Button fx:id="buttonDelete" mnemonicParsing="false" text="Удалить" />
                         <MenuButton fx:id="buttonSearch" mnemonicParsing="false" text="Найти">
                           <items>
-                            <MenuItem fx:id="buttonSearchByNumber" mnemonicParsing="false" text="По части номера" />
-                            <MenuItem fx:id="buttonSearchByColorEndBrand" mnemonicParsing="false" text="По цвету и марке" />
+                            <MenuItem fx:id="buttonSearchByNumber" mnemonicParsing="false" onAction="#searchOnClick" text="По части номера" />
+
+                            <MenuItem fx:id="buttonSearchByColorEndBrand" mnemonicParsing="false" onAction="#searchOnClick" text="По цвету и марке" />
                           </items>
                         </MenuButton>
                     </buttons>
