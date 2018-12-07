@@ -1,12 +1,13 @@
 package sample.Backend;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Auto {
+public class Auto implements Serializable {
     String registrationNumberOfTheCar;
-    String BRAND;
+    String brand;
     int yearOfRelease;
     String color;
     String nameOfTheOwner;
@@ -49,7 +50,7 @@ public class Auto {
 
     boolean setBrand(String newBrand) {
         if (Brand.isTrueBrand(newBrand)) {
-            this.BRAND = newBrand;
+            this.brand = newBrand;
             return true;
         } else
             System.out.println("Марка введена некорректно!");
@@ -119,13 +120,13 @@ public class Auto {
 
     @Override
     public String toString() {
-        return this.getBRAND() + "\t" + this.getYearOfRelease();
+        return this.getBrand() + "\t" + this.getYearOfRelease();
     }
 
     //endregion
     //region gett-еры
-    public String getBRAND() {
-        return this.BRAND;
+    public String getBrand() {
+        return this.brand;
     }
 
     public String getRegistrationNumberOfTheCar() {

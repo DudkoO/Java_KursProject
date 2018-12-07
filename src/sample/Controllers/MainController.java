@@ -1,24 +1,23 @@
 package sample.Controllers;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.Backend.Auto;
 import sample.Backend.Database;
 
 public class MainController {
-    Database data=new Database();
+    public Database data=new Database();
     @FXML
     private ResourceBundle resources;
 
@@ -55,39 +54,70 @@ public class MainController {
     @FXML
     void initialize()throws  Exception {
         data.testAutoСreator(10);
+        data.toFile(data.database);
        // data.printDatabaseToConsole();
-        columm1.setCellValueFactory(new PropertyValueFactory<>("BRAND"));
+        columm1.setCellValueFactory(new PropertyValueFactory<>("brand"));
         columm2.setCellValueFactory(new PropertyValueFactory<>("registrationNumberOfTheCar"));
         TableView.setItems(data.database);
-    //region Buttons
-        buttonAdd.setOnAction(event -> {});
-        buttonDelete.setOnAction(event -> {});
 
-
-    //endregion
 
     }
-   // void addOnClick()
 
 
 
 
-    public void searchOnClick(javafx.event.ActionEvent actionEvent) throws Exception {
+    //region Обработчики нажатий
+    @FXML
+    public void searchOnClick(javafx.event.ActionEvent actionEvent) throws IOException {
         String id=((MenuItem)actionEvent.getSource()).getId();
-        System.out.println(id);
-        String searchByNumberID="";
+        String searchByNumberID="buttonSearchByNumber";
+        String searchByColorEndBrandId="buttonSearchByColorEndBrand";
 
-        if(id.equals("buttonSearchByNumber")) {
-            Parent root = FXMLLoader.load(getClass().getResource("Scenes/SearchByNumberSample.fxml"));
-            Stage primaryStage = new Stage();
-            primaryStage.setTitle("Поиск");
-            primaryStage.setScene(new Scene(root, 300, 200));
-            primaryStage.show();
+        if(id.equals(searchByNumberID)) {
+            /*
+            FXMLLoader loader=new FXMLLoader();
+            System.out.println("go");
+            loader.setLocation(getClass().getResource("/sample/Scenes/SearchScene.fxml"));
+            loader.load();
+
+            Parent root=loader.getRoot();
+            Stage stage=new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+            */
+
+            Stage stage=new Stage();
+            Parent root = FXMLLoader.load(getClass().getResource("/sample/Scenes/SearchScene.fxml"));
+            stage.initModality(Modality.APPLICATION_MODAL);//заблокировали старое окно
+            stage.setTitle("Поиск");
+            stage.setScene(new Scene(root, 600, 100));
+            stage.setResizable(false);//отключаем изменение размера сцены
+            stage.show();
+
         }
-        else
+        else if(id.equals(searchByColorEndBrandId))
         {
 
         }
+
+
     }
+    public void addOnClick(){
+        System.out.println("addOnClick");
+
+    }
+    @FXML
+    public void deleteOnClick(){
+        System.out.println("deleteOnClick");
+        int deleteIndex=TableView.getSelectionModel().getSelectedIndex();
+      // сделать диалоговое окно(но лень)
+
+
+        System.out.println(deleteIndex);
+        data.database.remove(deleteIndex);
+
+    }
+
+    //endregion
 }
 

@@ -71,8 +71,8 @@
                   </GridPane>
                   <ButtonBar layoutX="14.0" layoutY="344.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="20.0">
                     <buttons>
-                      <Button fx:id="buttonAdd" mnemonicParsing="false" prefHeight="25.0" prefWidth="267.0" text="Добавить" />
-                        <Button fx:id="buttonDelete" mnemonicParsing="false" text="Удалить" />
+                      <Button fx:id="buttonAdd" mnemonicParsing="false" onAction="#addOnClick" prefHeight="25.0" prefWidth="267.0" text="Добавить" />
+                        <Button fx:id="buttonDelete" mnemonicParsing="false" onAction="#deleteOnClick" text="Удалить" />
                         <MenuButton fx:id="buttonSearch" mnemonicParsing="false" text="Найти">
                           <items>
                             <MenuItem fx:id="buttonSearchByNumber" mnemonicParsing="false" onAction="#searchOnClick" text="По части номера" />

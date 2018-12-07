@@ -3,9 +3,11 @@ package sample.Backend;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Random;
 
-public class Database {
+public class Database implements Serializable {
     public  ObservableList<Auto> database = FXCollections.observableArrayList();
     public void testAutoСreator(int quantity) {
         for (int i = 0; i < quantity; i++) {
@@ -59,10 +61,10 @@ public class Database {
         }
     }
 
-    private void printAutoData(Auto auto) {
+    private void printAutoDataToConsole(Auto auto) {
         System.out.println("------------------------------------------");
         System.out.println("Registration Number Of The Car:" + auto.getRegistrationNumberOfTheCar());
-        System.out.println("Brand:" + auto.getBRAND());
+        System.out.println("Brand:" + auto.getBrand());
         System.out.println("Year Of Relese:" + auto.getYearOfRelease());
         System.out.println("Color:" + auto.getColor());
         System.out.println("Name Of The Owner:" + auto.getNameOfTheOwner());
@@ -74,7 +76,43 @@ public class Database {
     }
     public void printDatabaseToConsole() {
         for (int i = 0; i < this.database.size(); i++) {
-            printAutoData(this.database.get(i));
+            printAutoDataToConsole(this.database.get(i));
         }
     }
+
+    public boolean toFile(ObservableList<Auto> database){
+        try {
+            // write object to file
+            FileOutputStream fos = new FileOutputStream("Database.dat");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(new ArrayList<Auto>(database));
+            oos.close();
+            return true;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+
+    }
+    public ObservableList<Auto> fromFile(){
+        ArrayList<Auto> database=null;
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Database.dat")))
+        {
+            database=(ArrayList) ois.readObject();
+        }
+        catch(Exception ex){
+
+            System.out.println(ex.getMessage());
+        }
+        ObservableList<Auto > databaseObservable =FXCollections.observableList(database);
+
+        return databaseObservable;
+    }
+
+
 }
