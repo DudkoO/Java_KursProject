@@ -57,12 +57,42 @@
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label text="text" GridPane.columnIndex="1">
+                        <Label fx:id="owner" text="text" GridPane.columnIndex="1">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Label text="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label fx:id="addres" text="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label text="Год выпуска:" GridPane.rowIndex="2">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label text="Цвет:" GridPane.rowIndex="3">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label text="Тип кузова:" GridPane.rowIndex="4">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="year" text="text" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="color" text="text" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="type" text="text" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -72,13 +102,18 @@
                   <ButtonBar layoutX="14.0" layoutY="344.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="20.0">
                     <buttons>
                       <Button fx:id="buttonAdd" mnemonicParsing="false" onAction="#addOnClick" prefHeight="25.0" prefWidth="267.0" text="Добавить" />
-                        <Button fx:id="buttonDelete" mnemonicParsing="false" onAction="#deleteOnClick" text="Удалить" />
                         <MenuButton fx:id="buttonSearch" mnemonicParsing="false" text="Найти">
                           <items>
                             <MenuItem fx:id="buttonSearchByNumber" mnemonicParsing="false" onAction="#searchOnClick" text="По части номера" />
 
                             <MenuItem fx:id="buttonSearchByColorEndBrand" mnemonicParsing="false" onAction="#searchOnClick" text="По цвету и марке" />
                           </items>
+                        </MenuButton>
+                        <MenuButton fx:id="buttonDelete" mnemonicParsing="false" text="Удалить">
+                           <items>
+                              <MenuItem fx:id="buttonDeleteByNumber" mnemonicParsing="false" onAction="#deleteByNumOnClick" text="По номеру" />
+                              <MenuItem fx:id="buttonDeleteSelected" mnemonicParsing="false" onAction="#deleteSelectedOnClick" text="Выбранный" />
+                           </items>
                         </MenuButton>
                     </buttons>
                   </ButtonBar>

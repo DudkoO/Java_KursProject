@@ -136,6 +136,11 @@ public class Auto implements Serializable {
     public int getYearOfRelease() {
         return this.yearOfRelease;
     }
+    public String getYearOfReleaseString(){
+        String string="";
+        string+=this.yearOfRelease;
+        return string;
+    }
 
     public String getColor() {
         return this.color;
