@@ -71,7 +71,7 @@ public class Database implements Serializable {
             roulette = random.nextInt(carTypes.length);
             auto.setCarType(carTypes[roulette].toString());
             //генерируем год выпуска
-            roulette = random.nextInt(2018 - 1930) + 1930;
+            roulette = random.nextInt(2018 - 1970) + 1970;
             auto.setYearOfRelease(roulette);
 
             database.add(auto);

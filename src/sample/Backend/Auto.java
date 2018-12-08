@@ -33,7 +33,7 @@ public class Auto implements Serializable {
 
     //endregion
     //region sett-еры
-    boolean setRegistrationNumberOfTheCar(String newRegistrationNumberOfTheCar) {
+   public boolean setRegistrationNumberOfTheCar(String newRegistrationNumberOfTheCar) {
         Pattern registrationNumberOfTheCarFormat = Pattern.compile("\\D{2}\\d{4}\\D{2}");
         // шаблом регулярного выражения для номера(первые два символа-любые буквы, следующие четыре-любые цифры, потом опять две буквы)
         Matcher m = registrationNumberOfTheCarFormat.matcher(newRegistrationNumberOfTheCar);
@@ -48,7 +48,7 @@ public class Auto implements Serializable {
         return false;
     }
 
-    boolean setBrand(String newBrand) {
+   public boolean setBrand(String newBrand) {
         if (Brand.isTrueBrand(newBrand)) {
             this.brand = newBrand;
             return true;
@@ -57,7 +57,7 @@ public class Auto implements Serializable {
         return false;
     }
 
-    boolean setYearOfRelease(int newYearOfRelease) {
+   public boolean setYearOfRelease(int newYearOfRelease) {
         //System.out.println("Year: "+new Date().getYear());
         if ((newYearOfRelease > 1900) && (newYearOfRelease <= (1900 + new Date().getYear())))//getYear возвращает год от 1900(одному господу известно, почему)
         {
@@ -68,7 +68,19 @@ public class Auto implements Serializable {
         return false;
     }
 
-    boolean setColor(String newColor) {
+    public boolean setYearOfRelease(String YearOfRelease) {
+        //System.out.println("Year: "+new Date().getYear());
+        int newYearOfRelease=Integer.parseInt(YearOfRelease);
+        if ((newYearOfRelease > 1900) && (newYearOfRelease <= (1900 + new Date().getYear())))//getYear возвращает год от 1900(одному господу известно, почему)
+        {
+            this.yearOfRelease = newYearOfRelease;
+            return true;
+        } else
+            System.out.println("Год выпуска введён некорректно!");
+        return false;
+    }
+
+   public boolean setColor(String newColor) {
         if (Color.isTrueColor(newColor)) {
             this.color = newColor;
             return true;
@@ -78,9 +90,9 @@ public class Auto implements Serializable {
 
     }
 
-    boolean setResidenceAddressOfTheOwner(String newResidenceAddressOfTheOwner) {
+   public boolean setResidenceAddressOfTheOwner(String newResidenceAddressOfTheOwner) {
         Pattern ResidenceAddressOfTheOwnerFormat = Pattern.compile("([A-Я][a-я]+),([A-Я][a-я]+),([\\w]{5}),([A-Я][a-я]+),([\\w]*),([\\w]*)");
-        // Страна,Город,Почтовый индекс,Улица,Дом,Квартира
+        // Страна,Город,Улица,Дом,Квартира
         // шаблом регулярного выражения для адреса
         Matcher m = ResidenceAddressOfTheOwnerFormat.matcher(newResidenceAddressOfTheOwner);
         //обьект искатель.интерпретирует шаблон и выполняет операции сопоставления с входной строкой
@@ -94,7 +106,7 @@ public class Auto implements Serializable {
         return false;
     }
 
-    boolean setNameOfTheOwner(String newNameOfTheOwner) {
+   public boolean setNameOfTheOwner(String newNameOfTheOwner) {
         Pattern NameOfTheOwnerFormat = Pattern.compile("^([А-Я][а-я]+) ([А-Я][а-я]+) ([А-Я][а-я]+)$");
         // шаблом регулярного выражения для ФИО
         Matcher m = NameOfTheOwnerFormat.matcher(newNameOfTheOwner);
@@ -110,7 +122,7 @@ public class Auto implements Serializable {
         return false;
     }
 
-    boolean setCarType(String newCarType) {
+   public boolean setCarType(String newCarType) {
         if (CarType.isTrueCarType(newCarType)) {
             this.carType = newCarType;
             return true;
