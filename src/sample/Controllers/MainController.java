@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -25,7 +27,9 @@ import sample.Backend.Database;
 
 public class MainController {
     public static Database data = new Database();
-    public static Stage SearchByNumStage = new Stage();
+
+    public static Stage resultSearchStage=new Stage();
+    public static ObservableList<Auto> matches = FXCollections.observableArrayList();//лист, хранящий совпавшие с частью номера записи(для поиска)
 
     //region FXML elements
     @FXML
@@ -121,32 +125,115 @@ public class MainController {
         String id = ((MenuItem) actionEvent.getSource()).getId();
         String searchByNumberID = "buttonSearchByNumber";
         String searchByColorEndBrandId = "buttonSearchByColorEndBrand";
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Поиск");
+        //Создаем диалоговое окно
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 10, 10, 10));
+        // Set the button types.
+        ButtonType searchButtonType = new ButtonType("Найти", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(searchButtonType, ButtonType.CANCEL);
+        //активирование кнопки найти
+        Node searchButton = dialog.getDialogPane().lookupButton(searchButtonType);
+        searchButton.setDisable(true);
+
+        matches.clear();
 
         if (id.equals(searchByNumberID)) {
-            /*
-            FXMLLoader loader=new FXMLLoader();
-            System.out.println("go");
-            loader.setLocation(getClass().getResource("/sample/Scenes/SearchScene.fxml"));
-            loader.load();
+            System.out.println("search by number");
 
-            Parent root=loader.getRoot();
-            Stage stage=new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
-            */
+            dialog.setHeaderText("Введите искомый номер");
+            TextField textNumberField = new TextField();
+            textNumberField.setPromptText("Регистрационный номер");
 
+            //grid.add(new Label("Username:"), 0, 0);
+            grid.add(textNumberField, 1, 0);
 
-            Parent root = FXMLLoader.load(getClass().getResource("/sample/Scenes/SearchScene.fxml"));
-            SearchByNumStage.initModality(Modality.APPLICATION_MODAL);//заблокировали старое окно
-            SearchByNumStage.setTitle("Поиск");
-            SearchByNumStage.setScene(new Scene(root, 600, 100));
-            SearchByNumStage.setResizable(false);//отключаем изменение размера сцены
-            SearchByNumStage.show();
+            // Do some validation (using the Java 8 lambda syntax).
+
+            textNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+                // System.out.println("test+"+newValue.trim().isEmpty());//true- когда поле ввода пустое
+                searchButton.setDisable(newValue.trim().isEmpty());
+
+            });
+
+            dialog.getDialogPane().setContent(grid);
+
+            dialog.showAndWait();
+            String partOfregistrationNumberOfTheCar = textNumberField.getText();//введённая искомая часть номера
+
+            for (int i = 0; i < this.data.database.size(); i++) {
+                if (this.data.database.get(i).getRegistrationNumberOfTheCar()
+                        .contains(partOfregistrationNumberOfTheCar)) {
+                    matches.add(data.database.get(i));
+                }
+            }
 
         } else if (id.equals(searchByColorEndBrandId)) {
+            System.out.println("search by brand end color");
+
+            dialog.setHeaderText("Введите цвет и марку искомого автомобиля");
+            TextField textBrandField = new TextField();
+            textBrandField.setPromptText("Марка");
+
+            TextField textColorField = new TextField();
+            textColorField.setPromptText("Цвет");
+
+            //grid.add(new Label("Username:"), 0, 0);
+            grid.add(textBrandField, 1, 0);
+            grid.add(textColorField, 2, 0);
+
+
+// Do some validation (using the Java 8 lambda syntax).
+            /*
+            ???
+            Виктор Александрович, в коде ниже пытаюсь оставлять кнопку поика
+            неактивной, пока не заполнены оба поля
+            Но делаю неправильно что-то
+             */
+            textBrandField.textProperty().addListener((observable, oldValue, newValue) -> {
+                // System.out.println("test+"+newValue.trim().isEmpty());//true- когда поле ввода пустое
+                searchButton.setDisable(newValue.trim().isEmpty());
+
+            });
+            textColorField.textProperty().addListener((observable, oldValue, newValue) -> {
+                // System.out.println("test+"+newValue.trim().isEmpty());//true- когда поле ввода пустое
+
+                searchButton.setDisable(newValue.trim().isEmpty());
+
+            });
+
+            dialog.getDialogPane().setContent(grid);
+
+            dialog.showAndWait();
+
+            String desiredBrand=textBrandField.getText();
+            String desiredColor=textColorField.getText();
+            for (int i = 0; i <this.data.database.size() ; i++) {
+                if(this.data.database.get(i).getBrand().equals(desiredBrand)){
+                    if(this.data.database.get(i).getColor().equals(desiredColor))
+                        matches.add(data.database.get(i));
+
+                }
+            }
 
         }
-
+        //выводим результаты поиска в виде новой таблицы
+        if(matches.size()>0) {
+            Parent root = FXMLLoader.load(getClass().getResource("/sample/Scenes/ResultSearchScene.fxml"));
+            resultSearchStage.setTitle("Результаты поиска");
+            resultSearchStage.setScene(new Scene(root, 700, 300));
+            // primaryStage.setResizable(false);//отключаем изменение размера сцены
+            resultSearchStage.show();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("");
+            alert.setHeaderText("Поиск не дал результатов");
+            alert.showAndWait();
+        }
 
     }
 
@@ -189,7 +276,7 @@ public class MainController {
 // Do some validation (using the Java 8 lambda syntax).
 
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-           // System.out.println("test+"+newValue.trim().isEmpty());//true- когда поле ввода пустое
+            // System.out.println("test+"+newValue.trim().isEmpty());//true- когда поле ввода пустое
             deleteButton.setDisable(newValue.trim().isEmpty());
 
         });
@@ -200,7 +287,7 @@ public class MainController {
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         /*
         отображать сообщение о необнаруженном номере только если нажали УДАЛИТЬ, а не закрыли окно
-
+        ???
         Виктор Александович, мне нужно, чтобы участок кода ниже
         этого комментария выполнался только
         если юзер нажал кнопку "удалить", а не закрыл окно другим способом.
@@ -210,26 +297,24 @@ public class MainController {
 
 
         //ищем, есть ли запись с таким номером
-        String temp=textField.getText().toString();
-        boolean flag=false;
-        int deleteIndex=0;
-        for (int i = 0; i <data.database.size() ; i++) {
-            if(data.database.get(i).getRegistrationNumberOfTheCar().equals(temp))
-            {
-                deleteIndex=i;
-                flag=true;
+        String temp = textField.getText().toString();
+        boolean flag = false;
+        int deleteIndex = 0;
+        for (int i = 0; i < data.database.size(); i++) {
+            if (data.database.get(i).getRegistrationNumberOfTheCar().equals(temp)) {
+                deleteIndex = i;
+                flag = true;
                 break;
             }
         }
 
-        if(flag) {
+        if (flag) {
             if (verification() && deleteIndex >= 0) {
                 System.out.println(deleteIndex);
                 data.database.remove(deleteIndex);
                 data.toFile(data.database);
             } else ;
-        }
-        else{
+        } else {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Ошибка");
             alert.setHeaderText("Запись с указанным номером не найдена!");
@@ -242,7 +327,6 @@ public class MainController {
         System.out.println("deleteOnClick");
         int deleteIndex = TableView.getSelectionModel().getSelectedIndex();
         //  диалоговое окно
-
 
 
         if (verification() && deleteIndex >= 0) {
