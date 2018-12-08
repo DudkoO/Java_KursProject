@@ -16,7 +16,7 @@ public class Database implements Serializable {
             Random random = new Random();
 
             //выбираем случайную марку из перечесления
-            Auto.Brand brands[] = Auto.Brand.values();
+            Brand brands[] = Brand.values();
             roulette = random.nextInt(brands.length);
             auto.setBrand(brands[roulette].toString());
 
@@ -42,15 +42,32 @@ public class Database implements Serializable {
             number[5] = (char) roulette;
             auto.setRegistrationNumberOfTheCar(new String(number));
             //пишем имя
-            auto.nameOfTheOwner = "Name #" + (i + 1);
+
+            String names[]={"Александр","Дмитрий","Сергей","Вадим","Владимир","Павел","Никитос","Евгений"};
+            String lastNames[]={"Иванов","Загороднюк","Горбатюк","Симонов","Кацюк","Черный","Броска","Бартальов","Повх","Набока","Рыбко"};
+            String middleТame[]={"Сергеевич","Анатолиевич","Олегович","Дмитриевич","Вадимович","Кацюкович","Павлович"};
+            String name="";
+            roulette=random.nextInt(lastNames.length);
+            name+=lastNames[roulette];
+            name+=" ";
+            roulette=random.nextInt(names.length);
+            name+=names[roulette];
+            name+=" ";
+            roulette=random.nextInt(middleТame.length);
+            name+=middleТame[roulette];
+            auto.setNameOfTheOwner(name);
+
+
             //пишем адрес
-            auto.residenceAddressOfTheOwner = "Addres #" + (i + 1);
+            String addres="Украина,Одесса,65000,Шевченко,Говорова,11";
+            auto.residenceAddressOfTheOwner=addres;
+
             // выбираем случайный цвет из перечисления
-            Auto.Color colors[] = Auto.Color.values();
+            Color colors[] = Color.values();
             roulette = random.nextInt(colors.length);
             auto.setColor(colors[roulette].toString());
             //выбираем случайный тип кузова
-            Auto.CarType carTypes[] = Auto.CarType.values();
+            CarType carTypes[] = CarType.values();
             roulette = random.nextInt(carTypes.length);
             auto.setCarType(carTypes[roulette].toString());
             //генерируем год выпуска

@@ -226,6 +226,7 @@ public class MainController {
             resultSearchStage.setTitle("Результаты поиска");
             resultSearchStage.setScene(new Scene(root, 700, 300));
             // primaryStage.setResizable(false);//отключаем изменение размера сцены
+            resultSearchStage.initModality(Modality.APPLICATION_MODAL);
             resultSearchStage.show();
         }
         else {

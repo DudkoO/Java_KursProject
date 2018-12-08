@@ -79,7 +79,7 @@ public class Auto implements Serializable {
     }
 
     boolean setResidenceAddressOfTheOwner(String newResidenceAddressOfTheOwner) {
-        Pattern ResidenceAddressOfTheOwnerFormat = Pattern.compile("([A-Z][a-z]+),([A-Z][a-z]+),([\\w]{5}),([A-Z][a-z]+),([\\w]*),([\\w]*)");
+        Pattern ResidenceAddressOfTheOwnerFormat = Pattern.compile("([A-Я][a-я]+),([A-Я][a-я]+),([\\w]{5}),([A-Я][a-я]+),([\\w]*),([\\w]*)");
         // Страна,Город,Почтовый индекс,Улица,Дом,Квартира
         // шаблом регулярного выражения для адреса
         Matcher m = ResidenceAddressOfTheOwnerFormat.matcher(newResidenceAddressOfTheOwner);
@@ -95,17 +95,18 @@ public class Auto implements Serializable {
     }
 
     boolean setNameOfTheOwner(String newNameOfTheOwner) {
-        Pattern NameOfTheOwnerFormat = Pattern.compile("^([A-Z][a-z]+) ([A-Z][a-z]+) ([A-Z][a-z]+)$");
+        Pattern NameOfTheOwnerFormat = Pattern.compile("^([А-Я][а-я]+) ([А-Я][а-я]+) ([А-Я][а-я]+)$");
         // шаблом регулярного выражения для ФИО
         Matcher m = NameOfTheOwnerFormat.matcher(newNameOfTheOwner);
         //обьект искатель.интерпретирует шаблон и выполняет операции сопоставления с входной строкой
         //мы отправили в обьект искатель то, что хотим записать в качестве нового ФИО
-        if (m.matches() && newNameOfTheOwner.length() < 64)//вернёт тру, если наш новый ФИО соответствует регулярному выражению
+        if (m.matches() && newNameOfTheOwner.length() < 164)//вернёт тру, если наш новый ФИО соответствует регулярному выражению
         {
             this.nameOfTheOwner = newNameOfTheOwner;//если тру, тогда записываем новый на место старого
             return true;
         } else
             System.out.println("ФИО введены некорректно!");
+        System.out.println();
         return false;
     }
 
@@ -136,9 +137,10 @@ public class Auto implements Serializable {
     public int getYearOfRelease() {
         return this.yearOfRelease;
     }
-    public String getYearOfReleaseString(){
-        String string="";
-        string+=this.yearOfRelease;
+
+    public String getYearOfReleaseString() {
+        String string = "";
+        string += this.yearOfRelease;
         return string;
     }
 
@@ -159,73 +161,7 @@ public class Auto implements Serializable {
     }
 
     //endregion
-    enum CarType {
-        Sedan,
-        Hatchback,
-        Universal,
-        Liftback,
-        Coupe,
-        Convertible,
-        Roadster,
-        Stretch,
-        Targa,
-        SUV,
-        Crossover,
-        Pickup,
-        Truck,
-        Van,
-        Minivan;
 
-        public static boolean isTrueCarType(String carType) {
-            CarType[] array = CarType.values();
-            for (int i = 0; i < array.length; i++) {
-                // System.out.println(array[i]);
-                if (array[i].toString().equals(carType)) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
-    }
-
-    enum Color {
-        RED("#FF0000"), BLUE("#0000FF"), GREEN("#00FF00");
-        private String code;
-
-        Color(String code) {
-            this.code = code;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public static boolean isTrueColor(String color) {
-            Color[] array = Color.values();
-            for (int i = 0; i < array.length; i++) {
-                // System.out.println(array[i]);
-                if (array[i].toString().equals(color)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
-    enum Brand {
-        BMW, LADA, Lexus, Tesla, Citroen;
-
-        public static boolean isTrueBrand(String brand) {
-            Brand[] array = Brand.values();
-            for (int i = 0; i < array.length; i++) {
-                // System.out.println(array[i]);
-                if (array[i].toString().equals(brand)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-    }
 }
+

@@ -49,7 +49,6 @@ public class ResultSearchController {
         columnType.setCellValueFactory(new PropertyValueFactory<>("carType"));
         TableView.setItems(MainController.matches);
 
-
     }
 }
 
