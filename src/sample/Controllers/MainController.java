@@ -17,7 +17,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import sample.Backend.Auto;
@@ -86,8 +85,8 @@ public class MainController {
     //endregion
     @FXML
     void initialize() throws Exception {
-        data.testAutoСreator(100);
-        //data.database=data.fromFile();
+        //data.testAutoСreator(50);
+        data.database=data.fromFile();
         // data.printDatabaseToConsole();
         columm1.setCellValueFactory(new PropertyValueFactory<>("brand"));
         columm2.setCellValueFactory(new PropertyValueFactory<>("registrationNumberOfTheCar"));
@@ -255,7 +254,9 @@ public class MainController {
 
         System.out.println("addOnClick");
         Auto auto = new Auto();
-        boolean flag = true;
+
+        AtomicBoolean flagClose = new AtomicBoolean(false);
+        flagClose.set(false);
         AtomicBoolean AddClick[] = new AtomicBoolean[7];
         for (int i = 0; i < AddClick.length; i++) {
             AddClick[i] = new AtomicBoolean();
@@ -283,66 +284,66 @@ public class MainController {
 
         dialog.setHeaderText("Заполните данные");
 
-        Label brandLabel=new Label("Марка:");
+        Label brandLabel = new Label("Марка:");
         TextField brandTextField = new TextField();
         brandTextField.setPromptText("BMW");
         Label brandErrorLabel = new Label("");
 
-        Label numLabel=new Label("Номер:");
+        Label numLabel = new Label("Номер:");
         TextField numTextField = new TextField();
         numTextField.setPromptText("ХХ0000ХХ");
         Label numErrorLabel = new Label("");
 
-        Label colorLabel=new Label("Цвет:");
+        Label colorLabel = new Label("Цвет:");
         TextField colorTextField = new TextField();
         colorTextField.setPromptText("Цвет");
         Label colorErrorLabel = new Label("");
 
-        Label ownewLabel=new Label("Владелец:");
+        Label ownewLabel = new Label("Владелец:");
         TextField ownerTextField = new TextField();
         ownerTextField.setPromptText("Фамилия Имя Отчество");
         Label ownerErrorLabel = new Label("");
 
-        Label adddresLabel=new Label("Адрес владельца:");
+        Label adddresLabel = new Label("Адрес владельца:");
         TextField addresTextField = new TextField();
         addresTextField.setPromptText("Страна,Город,Улица,Дом,Квартира");
         Label adddresErrorLabel = new Label("");
 
-        Label yearLabel=new Label("Год выпуска:");
+        Label yearLabel = new Label("Год выпуска:");
         TextField yearTextField = new TextField();
         yearTextField.setPromptText("1999");
         Label yearErrorLabel = new Label("");
 
-        Label typeLabel=new Label("Тип кузова:");
+        Label typeLabel = new Label("Тип кузова:");
         TextField typeTextField = new TextField();
         typeTextField.setPromptText("Седан");
         Label typeErrorLabel = new Label("");
 
-        grid.add(brandLabel,1,0);
+        grid.add(brandLabel, 1, 0);
         grid.add(brandTextField, 2, 0);
         grid.add(brandErrorLabel, 3, 0);
 
-        grid.add(numLabel,1,1);
+        grid.add(numLabel, 1, 1);
         grid.add(numTextField, 2, 1);
         grid.add(numErrorLabel, 3, 1);
 
-        grid.add(colorLabel,1,2);
+        grid.add(colorLabel, 1, 2);
         grid.add(colorTextField, 2, 2);
         grid.add(colorErrorLabel, 3, 2);
 
-        grid.add(ownewLabel,1,3);
+        grid.add(ownewLabel, 1, 3);
         grid.add(ownerTextField, 2, 3);
         grid.add(ownerErrorLabel, 3, 3);
 
-        grid.add(adddresLabel,1,4);
+        grid.add(adddresLabel, 1, 4);
         grid.add(addresTextField, 2, 4);
         grid.add(adddresErrorLabel, 3, 4);
 
-        grid.add(yearLabel,1,5);
+        grid.add(yearLabel, 1, 5);
         grid.add(yearTextField, 2, 5);
         grid.add(yearErrorLabel, 3, 5);
 
-        grid.add(typeLabel,1,6);
+        grid.add(typeLabel, 1, 6);
         grid.add(typeTextField, 2, 6);
         grid.add(typeErrorLabel, 3, 6);
         //endregion
@@ -413,50 +414,110 @@ public class MainController {
             addButton.setDisable(!testAccess(AddClick));
         });
         //endregion и
+        restartLink:
+        {
 
-        do {
-            dialog.setResultConverter(dialogButton -> {
-                if (dialogButton == addButtonType) {
-                    //region Считываем данные с полей и проверяем их
-                    if (!auto.setBrand(brandTextField.getText()))
-                        brandErrorLabel.setText("Несуществующая марка");
-                    else brandErrorLabel.setText("");
+            do {
+                dialog.setResultConverter(dialogButton -> {
+                    if (dialogButton == addButtonType) {
+                        //region Считываем данные с полей и проверяем их
+                        if (!auto.setBrand(brandTextField.getText()))
+                            brandErrorLabel.setText("Несуществующая марка");
+                        else brandErrorLabel.setText("");
 
-                    if (!auto.setResidenceAddressOfTheOwner(addresTextField.getText()))
-                        adddresErrorLabel.setText("Неверный формат");
-                    else adddresErrorLabel.setText("");
+                        if (!auto.setResidenceAddressOfTheOwner(addresTextField.getText()))
+                            adddresErrorLabel.setText("Неверный формат");
+                        else adddresErrorLabel.setText("");
 
-                    if (!auto.setNameOfTheOwner(ownerTextField.getText()))
-                        ownerErrorLabel.setText("Неверный формат");
-                    else ownerErrorLabel.setText("");
+                        if (!auto.setNameOfTheOwner(ownerTextField.getText()))
+                            ownerErrorLabel.setText("Неверный формат");
+                        else ownerErrorLabel.setText("");
 
-                    if(!auto.setColor(colorTextField.getText()))
-                        colorErrorLabel.setText("Неусуществующий цвет");
-                    else colorErrorLabel.setText("");
+                        if (!auto.setColor(colorTextField.getText()))
+                            colorErrorLabel.setText("Несуществующий цвет");
+                        else colorErrorLabel.setText("");
 
-                    if(!auto.setRegistrationNumberOfTheCar(numTextField.getText()))
-                        numErrorLabel.setText("Неверный формат");
-                    else numErrorLabel.setText("");
-                    if(!auto.setYearOfRelease(yearTextField.getText()))
-                        yearErrorLabel.setText("Неверный год");
-                    else yearErrorLabel.setText("");
-                    if(!auto.setCarType(typeTextField.getText()))
-                        typeErrorLabel.setText("Несуществующий тип");
-                    else typeErrorLabel.setText("");
-                    //endregion
+                        if (!auto.setRegistrationNumberOfTheCar(numTextField.getText()))
+                            numErrorLabel.setText("Неверный формат");
+                        else numErrorLabel.setText("");
+                        if (!auto.setYearOfRelease(yearTextField.getText()))
+                            yearErrorLabel.setText("Неверный год");
+                        else yearErrorLabel.setText("");
+                        if (!auto.setCarType(typeTextField.getText()))
+                            typeErrorLabel.setText("Несуществующий тип");
+                        else typeErrorLabel.setText("");
+
+
+
+
+
+                        //endregion
+                    } else {
+                        dialog.setResultConverter(dialogButton1 -> {
+                            if (dialogButton1 == closeButtonType)
+                                flagClose.set(true);
+                            return null;
+                        });
+                    }
+
+
+                    return null;
+                });
+
+
+                dialog.getDialogPane().setContent(grid);
+                dialog.getDialogPane().setMinWidth(500);
+                dialog.showAndWait();
+               /*
+               if(flagClose.get())
+                   break ;
+                   *///region Добавление новой записи в случае верного ввода всех данных
+                //если все поля ошибок пусты- все данные введены верно
+                if (numErrorLabel.equals("")
+                        && colorErrorLabel.equals("")
+                        && brandErrorLabel.equals("")
+                        && ownerErrorLabel.equals("")
+                        && adddresErrorLabel.equals("")
+                        && yearErrorLabel.equals("")
+                        && typeErrorLabel.equals(""))
+                {
+                    data.database.add(0,auto);
+                    flagClose.set(true);
                 }
 
+                //endregion
 
-                return null;
-            });
+                //region Добавление новой записи в случае верного ввода всех данных
+                //если все поля ошибок пусты- все данные введены верно
+                if (numErrorLabel.getText().equals("")
+                        && colorErrorLabel.getText().equals("")
+                        && brandErrorLabel.getText().equals("")
+                        && ownerErrorLabel.getText().equals("")
+                        && adddresErrorLabel.getText().equals("")
+                        && yearErrorLabel.getText().equals("")
+                        && typeErrorLabel.getText().equals(""))
+                {
+                    data.database.add(0,auto);
+                    if(ownerTextField.getText().equals("Сперанский Виктор Александрович"))
+                        welcomSuperUser();
+                    flagClose.set(true);
+                }
+
+                //endregion
+            } while (!flagClose.get());
+        }
+    }
+
+    private void welcomSuperUser() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Приветствие");
+        alert.setHeaderText("Добро пожаловать в базу, Виктор Александрович");
+        alert.setContentText("Теперь вы суперпользователь =)");
 
 
-            dialog.getDialogPane().setContent(grid);
-            dialog.getDialogPane().setMinWidth(500);
-            dialog.showAndWait();
+        alert.getButtonTypes().setAll(ButtonType.OK);
 
-        } while (true);
-
+        alert.showAndWait();
     }
 
     public void deleteByNumOnClick(javafx.event.ActionEvent actionEvent) {

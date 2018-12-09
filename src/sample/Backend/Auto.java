@@ -70,7 +70,14 @@ public class Auto implements Serializable {
 
     public boolean setYearOfRelease(String YearOfRelease) {
         //System.out.println("Year: "+new Date().getYear());
-        int newYearOfRelease=Integer.parseInt(YearOfRelease);
+        int newYearOfRelease;
+        try {
+             newYearOfRelease=Integer.parseInt(YearOfRelease);
+        }
+        catch (Exception e){
+            return false;
+        }
+
         if ((newYearOfRelease > 1900) && (newYearOfRelease <= (1900 + new Date().getYear())))//getYear возвращает год от 1900(одному господу известно, почему)
         {
             this.yearOfRelease = newYearOfRelease;
@@ -91,7 +98,7 @@ public class Auto implements Serializable {
     }
 
    public boolean setResidenceAddressOfTheOwner(String newResidenceAddressOfTheOwner) {
-        Pattern ResidenceAddressOfTheOwnerFormat = Pattern.compile("([A-Я][a-я]+),([A-Я][a-я]+),([\\w]{5}),([A-Я][a-я]+),([\\w]*),([\\w]*)");
+        Pattern ResidenceAddressOfTheOwnerFormat = Pattern.compile("([A-Я][a-я]+),([A-Я][a-я]+),([A-Я][a-я]+),([\\w]*),([\\w]*)");
         // Страна,Город,Улица,Дом,Квартира
         // шаблом регулярного выражения для адреса
         Matcher m = ResidenceAddressOfTheOwnerFormat.matcher(newResidenceAddressOfTheOwner);
