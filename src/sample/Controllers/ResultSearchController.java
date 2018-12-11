@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import sample.Backend.Auto;
+import sample.Backend.Owner;
 
 
 public class ResultSearchController {

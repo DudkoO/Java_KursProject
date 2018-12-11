@@ -16,7 +16,26 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.MainController">
    <children>
-      <SplitPane dividerPositions="0.5" prefHeight="400.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ButtonBar prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="20.0">
+        <buttons>
+            <Button fx:id="buttonDetails" mnemonicParsing="false" onAction="#showOwnerDetails" prefHeight="25.0" prefWidth="267.0" text="Детали о владельце" />
+          <Button fx:id="buttonAdd" mnemonicParsing="false" onAction="#addOnClick" prefHeight="25.0" prefWidth="267.0" text="Добавить" />
+            <MenuButton fx:id="buttonSearch" mnemonicParsing="false" text="Найти">
+              <items>
+                <MenuItem fx:id="buttonSearchByNumber" mnemonicParsing="false" onAction="#searchOnClick" text="По части номера" />
+
+                <MenuItem fx:id="buttonSearchByColorEndBrand" mnemonicParsing="false" onAction="#searchOnClick" text="По цвету и марке" />
+              </items>
+            </MenuButton>
+            <MenuButton fx:id="buttonDelete" mnemonicParsing="false" text="Удалить">
+               <items>
+                  <MenuItem fx:id="buttonDeleteByNumber" mnemonicParsing="false" onAction="#deleteByNumOnClick" text="По номеру" />
+                  <MenuItem fx:id="buttonDeleteSelected" mnemonicParsing="false" onAction="#deleteSelectedOnClick" text="Выбранный" />
+               </items>
+            </MenuButton>
+        </buttons>
+      </ButtonBar>
+      <SplitPane dividerPositions="0.45864661654135336" prefHeight="400.0" prefWidth="800.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
             <TableView fx:id="TableView" prefHeight="398.0" prefWidth="319.0">
               <columns>
@@ -99,24 +118,6 @@
                         </Label>
                      </children>
                   </GridPane>
-                  <ButtonBar layoutX="14.0" layoutY="344.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="20.0">
-                    <buttons>
-                      <Button fx:id="buttonAdd" mnemonicParsing="false" onAction="#addOnClick" prefHeight="25.0" prefWidth="267.0" text="Добавить" />
-                        <MenuButton fx:id="buttonSearch" mnemonicParsing="false" text="Найти">
-                          <items>
-                            <MenuItem fx:id="buttonSearchByNumber" mnemonicParsing="false" onAction="#searchOnClick" text="По части номера" />
-
-                            <MenuItem fx:id="buttonSearchByColorEndBrand" mnemonicParsing="false" onAction="#searchOnClick" text="По цвету и марке" />
-                          </items>
-                        </MenuButton>
-                        <MenuButton fx:id="buttonDelete" mnemonicParsing="false" text="Удалить">
-                           <items>
-                              <MenuItem fx:id="buttonDeleteByNumber" mnemonicParsing="false" onAction="#deleteByNumOnClick" text="По номеру" />
-                              <MenuItem fx:id="buttonDeleteSelected" mnemonicParsing="false" onAction="#deleteSelectedOnClick" text="Выбранный" />
-                           </items>
-                        </MenuButton>
-                    </buttons>
-                  </ButtonBar>
                </children>
             </AnchorPane>
         </items>

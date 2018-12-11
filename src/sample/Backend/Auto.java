@@ -1,18 +1,20 @@
 package sample.Backend;
 
+import sample.Controllers.MainController;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Auto implements Serializable {
-    String registrationNumberOfTheCar;
+    String registrationNumberOfTheCar = "";
     String brand;
     int yearOfRelease;
     String color;
-    String nameOfTheOwner;
-    String residenceAddressOfTheOwner;
     String carType;
+    public String nameOfTheOwner;
+    public String residenceAddressOfTheOwner;
 
     //region Конструкторы
     public Auto(String registrationNumberOfTheCar, String brand, int yearOfRelease,
@@ -33,71 +35,8 @@ public class Auto implements Serializable {
 
     //endregion
     //region sett-еры
-   public boolean setRegistrationNumberOfTheCar(String newRegistrationNumberOfTheCar) {
-        Pattern registrationNumberOfTheCarFormat = Pattern.compile("\\D{2}\\d{4}\\D{2}");
-        // шаблом регулярного выражения для номера(первые два символа-любые буквы, следующие четыре-любые цифры, потом опять две буквы)
-        Matcher m = registrationNumberOfTheCarFormat.matcher(newRegistrationNumberOfTheCar);
-        //обьект искатель.интерпретирует шаблон и выполняет операции сопоставления с входной строкой
-        //мы отправили в обьект искатель то, что хотим записать в качестве нового номера
-        if (m.matches())//вернёт тру, если наш новый номер соответствует регулярному выражению
-        {
-            this.registrationNumberOfTheCar = newRegistrationNumberOfTheCar;//если тру, тогда записываем новый на место старого
-            return true;
-        } else
-            System.out.println("Номер введен некорректно!");
-        return false;
-    }
 
-   public boolean setBrand(String newBrand) {
-        if (Brand.isTrueBrand(newBrand)) {
-            this.brand = newBrand;
-            return true;
-        } else
-            System.out.println("Марка введена некорректно!");
-        return false;
-    }
-
-   public boolean setYearOfRelease(int newYearOfRelease) {
-        //System.out.println("Year: "+new Date().getYear());
-        if ((newYearOfRelease > 1900) && (newYearOfRelease <= (1900 + new Date().getYear())))//getYear возвращает год от 1900(одному господу известно, почему)
-        {
-            this.yearOfRelease = newYearOfRelease;
-            return true;
-        } else
-            System.out.println("Год выпуска введён некорректно!");
-        return false;
-    }
-
-    public boolean setYearOfRelease(String YearOfRelease) {
-        //System.out.println("Year: "+new Date().getYear());
-        int newYearOfRelease;
-        try {
-             newYearOfRelease=Integer.parseInt(YearOfRelease);
-        }
-        catch (Exception e){
-            return false;
-        }
-
-        if ((newYearOfRelease > 1900) && (newYearOfRelease <= (1900 + new Date().getYear())))//getYear возвращает год от 1900(одному господу известно, почему)
-        {
-            this.yearOfRelease = newYearOfRelease;
-            return true;
-        } else
-            System.out.println("Год выпуска введён некорректно!");
-        return false;
-    }
-
-   public boolean setColor(String newColor) {
-        if (Color.isTrueColor(newColor)) {
-            this.color = newColor;
-            return true;
-        } else
-            System.out.println("Цвет введён некорректно!");
-        return false;
-
-    }
-
-   public boolean setResidenceAddressOfTheOwner(String newResidenceAddressOfTheOwner) {
+    public boolean setResidenceAddressOfTheOwner(String newResidenceAddressOfTheOwner) {
         Pattern ResidenceAddressOfTheOwnerFormat = Pattern.compile("([A-Я][a-я]+),([A-Я][a-я]+),([A-Я][a-я]+),([\\w]*),([\\w]*)");
         // Страна,Город,Улица,Дом,Квартира
         // шаблом регулярного выражения для адреса
@@ -113,7 +52,7 @@ public class Auto implements Serializable {
         return false;
     }
 
-   public boolean setNameOfTheOwner(String newNameOfTheOwner) {
+    public boolean setNameOfTheOwner(String newNameOfTheOwner) {
         Pattern NameOfTheOwnerFormat = Pattern.compile("^([А-Я][а-я]+) ([А-Я][а-я]+) ([А-Я][а-я]+)$");
         // шаблом регулярного выражения для ФИО
         Matcher m = NameOfTheOwnerFormat.matcher(newNameOfTheOwner);
@@ -129,7 +68,67 @@ public class Auto implements Serializable {
         return false;
     }
 
-   public boolean setCarType(String newCarType) {
+    public boolean setRegistrationNumberOfTheCar(String newRegistrationNumberOfTheCar) {
+        Pattern registrationNumberOfTheCarFormat = Pattern.compile("\\D{2}\\d{4}\\D{2}");
+        // шаблом регулярного выражения для номера(первые два символа-любые буквы, следующие четыре-любые цифры, потом опять две буквы)
+        Matcher m = registrationNumberOfTheCarFormat.matcher(newRegistrationNumberOfTheCar);
+        //обьект искатель.интерпретирует шаблон и выполняет операции сопоставления с входной строкой
+        //мы отправили в обьект искатель то, что хотим записать в качестве нового номера
+        if (m.matches())//вернёт тру, если наш новый номер соответствует регулярному выражению
+        {
+            if (uniqueNumber(newRegistrationNumberOfTheCar)) {
+                this.registrationNumberOfTheCar = newRegistrationNumberOfTheCar;//если тру, тогда записываем новый на место старого
+                return true;
+            }
+        } else
+            System.out.println("Номер введен некорректно!");
+        return false;
+    }
+
+    public boolean setBrand(String newBrand) {
+        if (Brand.isTrueBrand(newBrand)) {
+            this.brand = newBrand;
+            return true;
+        } else
+            System.out.println("Марка введена некорректно!");
+        return false;
+    }
+
+    public boolean setYearOfRelease(int newYearOfRelease) {
+        //System.out.println("Year: "+new Date().getYear());
+        if ((newYearOfRelease > 1900) && (newYearOfRelease <= (1900 + new Date().getYear())))//getYear возвращает год от 1900(одному господу известно, почему)
+        {
+            this.yearOfRelease = newYearOfRelease;
+            return true;
+        } else
+            System.out.println("Год выпуска введён некорректно!");
+        return false;
+    }
+
+    public boolean setYearOfRelease(String YearOfRelease) {
+        //System.out.println("Year: "+new Date().getYear());
+        int newYearOfRelease;
+        try {
+            newYearOfRelease = Integer.parseInt(YearOfRelease);
+        } catch (Exception e) {
+            return false;
+        }
+
+        return  setYearOfRelease(newYearOfRelease);
+    }
+
+    public boolean setColor(String newColor) {
+        if (Color.isTrueColor(newColor)) {
+            this.color = newColor;
+            return true;
+        } else
+            System.out.println("Цвет введён некорректно!");
+        return false;
+
+    }
+
+
+    public boolean setCarType(String newCarType) {
         if (CarType.isTrueCarType(newCarType)) {
             this.carType = newCarType;
             return true;
@@ -144,7 +143,16 @@ public class Auto implements Serializable {
     }
 
     //endregion
-    //region gett-еры
+    //region gett-
+
+    public String getResidenceAddressOfTheOwner() {
+        return this.residenceAddressOfTheOwner;
+    }
+
+    public String getNameOfTheOwner() {
+        return this.nameOfTheOwner;
+    }
+
     public String getBrand() {
         return this.brand;
     }
@@ -167,13 +175,6 @@ public class Auto implements Serializable {
         return this.color;
     }
 
-    public String getNameOfTheOwner() {
-        return this.nameOfTheOwner;
-    }
-
-    public String getResidenceAddressOfTheOwner() {
-        return this.residenceAddressOfTheOwner;
-    }
 
     public String getCarType() {
         return this.carType;
@@ -181,6 +182,14 @@ public class Auto implements Serializable {
 
     //endregion
 
+    public boolean uniqueNumber(String registrationNumberOfTheCar){//возвращает true,если номер уникален
 
+        for (int i = 0; i <MainController.data.database.size(); i++) {
+            if(MainController.data.database.get(i).getRegistrationNumberOfTheCar().equals(registrationNumberOfTheCar)){
+                return false;
+            }
+        }
+        return true;
+    }
 }
 

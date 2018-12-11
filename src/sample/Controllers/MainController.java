@@ -2,12 +2,15 @@ package sample.Controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.Optional;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -21,6 +24,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import sample.Backend.Auto;
 import sample.Backend.Database;
+import sample.Backend.Owner;
 
 
 //TODO Виктор Александрович, если вы читаете это- то вопросов у меня больше нет) НО большое спасибо!
@@ -30,6 +34,7 @@ public class MainController {
 
     public static Stage resultSearchStage = new Stage();
     public static ObservableList<Auto> matches = FXCollections.observableArrayList();//лист, хранящий совпавшие с частью номера записи(для поиска)
+    public static ObservableList<Owner> owners = FXCollections.observableArrayList();//лист, хранящий водитилей
 
     //region FXML elements
     @FXML
@@ -63,6 +68,8 @@ public class MainController {
 
     @FXML
     private Label type;
+    @FXML
+    private Button buttonDetails;
 
     @FXML
     private Button buttonAdd;
@@ -88,16 +95,23 @@ public class MainController {
     //endregion
     @FXML
     void initialize() throws Exception {
-        //data.testAutoСreator(50);
-        data.database=data.fromFile();
+       // data.testAutoСreator(25);
+          data.database=data.AutobaseFromFile();//считали базу автомобилей
+
         // data.printDatabaseToConsole();
+
+        initializeOwners();
+
+
         columm1.setCellValueFactory(new PropertyValueFactory<>("brand"));
         columm2.setCellValueFactory(new PropertyValueFactory<>("registrationNumberOfTheCar"));
         TableView.setItems(data.database);
         showDetails(null);
         TableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showDetails(newValue));
-        data.toFile(data.database);
+
+        data.AutobaseToFile(data.database);
+
 
     }
 
@@ -215,12 +229,12 @@ public class MainController {
 
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == searchButtonType) {//если нажали "найти", выполняем код
-                    String desiredBrand = textBrandField.getText();
-                    String desiredColor = textColorField.getText();
+                    String desiredBrand = textBrandField.getText().toLowerCase();
+                    String desiredColor = textColorField.getText().toLowerCase();
                     searchOnClickButton.set(true);
                     for (int i = 0; i < this.data.database.size(); i++) {
-                        if (this.data.database.get(i).getBrand().equals(desiredBrand))
-                            if (this.data.database.get(i).getColor().equals(desiredColor))
+                        if (this.data.database.get(i).getBrand().toLowerCase().equals(desiredBrand))
+                            if (this.data.database.get(i).getColor().toLowerCase().equals(desiredColor))
                                 matches.add(data.database.get(i));
 
                     }
@@ -451,9 +465,6 @@ public class MainController {
                         else typeErrorLabel.setText("");
 
 
-
-
-
                         //endregion
                     } else {
                         dialog.setResultConverter(dialogButton1 -> {
@@ -471,26 +482,7 @@ public class MainController {
                 dialog.getDialogPane().setContent(grid);
                 dialog.getDialogPane().setMinWidth(500);
                 dialog.showAndWait();
-               /*
-               if(flagClose.get())
-                   break ;
-                   *///region Добавление новой записи в случае верного ввода всех данных
-                //если все поля ошибок пусты- все данные введены верно
-                if (numErrorLabel.equals("")
-                        && colorErrorLabel.equals("")
-                        && brandErrorLabel.equals("")
-                        && ownerErrorLabel.equals("")
-                        && adddresErrorLabel.equals("")
-                        && yearErrorLabel.equals("")
-                        && typeErrorLabel.equals(""))
-                {
-                    data.database.add(0,auto);
-                    flagClose.set(true);
-                }
 
-                //endregion
-
-                //region Добавление новой записи в случае верного ввода всех данных
                 //если все поля ошибок пусты- все данные введены верно
                 if (numErrorLabel.getText().equals("")
                         && colorErrorLabel.getText().equals("")
@@ -498,29 +490,20 @@ public class MainController {
                         && ownerErrorLabel.getText().equals("")
                         && adddresErrorLabel.getText().equals("")
                         && yearErrorLabel.getText().equals("")
-                        && typeErrorLabel.getText().equals(""))
-                {
-                    data.database.add(0,auto);
-                    if(ownerTextField.getText().equals("Сперанский Виктор Александрович"))
-                        welcomSuperUser();
-                    flagClose.set(true);
+                        && typeErrorLabel.getText().equals("")) {
+                    if (!auto.getRegistrationNumberOfTheCar().equals("")) {
+                        data.database.add(0, auto);
+                        data.AutobaseToFile(data.database);
+                        if (ownerTextField.getText().equals("Сперанский Виктор Александрович"))
+                            welcomSuperUser();
+                        flagClose.set(true);
+                    }
                 }
 
                 //endregion
             } while (!flagClose.get());
         }
-    }
-
-    private void welcomSuperUser() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Приветствие");
-        alert.setHeaderText("Добро пожаловать в базу, Виктор Александрович");
-        alert.setContentText("Теперь вы суперпользователь =)");
-
-
-        alert.getButtonTypes().setAll(ButtonType.OK);
-
-        alert.showAndWait();
+        data.AutobaseToFile(data.database);
     }
 
     public void deleteByNumOnClick(javafx.event.ActionEvent actionEvent) {
@@ -579,7 +562,7 @@ public class MainController {
                     if (verificationDeleteAlert() && deleteIndex >= 0) {
                         System.out.println(deleteIndex);
                         data.database.remove(deleteIndex);
-                        data.toFile(data.database);
+                        data.AutobaseToFile(data.database);
                     } else ;
                 } else {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -604,7 +587,7 @@ public class MainController {
             if (verificationDeleteAlert()) {
                 System.out.println(deleteIndex);
                 data.database.remove(deleteIndex);
-                data.toFile(data.database);
+                data.AutobaseToFile(data.database);
             }
 
 
@@ -634,6 +617,18 @@ public class MainController {
         }
     }
 
+    private void welcomSuperUser() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Приветствие");
+        alert.setHeaderText("Добро пожаловать в базу, Виктор Александрович");
+        alert.setContentText("Теперь вы суперпользователь =)");
+
+
+        alert.getButtonTypes().setAll(ButtonType.OK);
+
+        alert.showAndWait();
+    }
+
     public boolean testAccess(AtomicBoolean[] AddClick) {
         boolean flag = true;
         System.out.println("test");
@@ -652,6 +647,136 @@ public class MainController {
         System.out.println();
 
         return flag;
+    }
+
+    public void initializeOwners() {
+        boolean registered = false;
+        Random random = new Random();
+        for (int i = 0; i < data.database.size(); i++) {
+            for (int j = 0; j < owners.size(); j++) {
+                if (owners.size() > -1)
+                    if (data.database.get(i).getNameOfTheOwner().equals(owners.get(j).getNameOfTheOwner())) {
+                        registered = true;
+                        break;
+                    }
+            }
+            if (!registered) {
+                Owner owner = new Owner();
+                owner.setNameOfTheOwner(data.database.get(i).getNameOfTheOwner());
+
+                int tepm = random.nextInt(999999999);
+                long time = (new Date().getTime() - 723930909 - tepm) / 2;
+                owner.driversLicense.setCategoryB(true);
+                owner.setExperience(time);
+                owners.add(owner);
+                //  System.out.println("owner adds");
+            }
+        }
+        countPersonalCars();
+
+    }
+
+    public void countPersonalCars() {
+        for (int i = 0; i < owners.size(); i++) {
+            for (int j = 0; j < data.database.size(); j++) {
+                if (data.database.get(j).getNameOfTheOwner().equals(owners.get(i).getNameOfTheOwner()))
+                    owners.get(i).personalСars.add(data.database.get(j));
+
+
+            }
+
+        }
+    }
+
+    public void showOwnerDetails(ActionEvent actionEvent) {
+        System.out.println("details");
+        int detailsAutoIndex = TableView.getSelectionModel().getSelectedIndex();
+        int detailsOwnerIndex = -1;
+        if (detailsAutoIndex >= 0) {
+            //ищем водителя, которому пренажлежит машина
+            for (int i = 0; i < owners.size(); i++) {
+                if (owners.get(i).getNameOfTheOwner().equals(data.database.get(detailsAutoIndex).getNameOfTheOwner())) {
+                    detailsOwnerIndex = i;
+                    break;
+                }
+            }
+
+            if (detailsOwnerIndex > -1) {
+                Dialog<Pair<String, String>> dialog = new Dialog<>();
+                dialog.setTitle("Ведомость о водителе");
+                //Создаем диалоговое окно
+                GridPane grid = new GridPane();
+                grid.setHgap(10);
+                grid.setVgap(10);
+                grid.setPadding(new Insets(20, 10, 10, 10));
+                // Set the button types.
+                ButtonType openСategoryButtonType = new ButtonType("Открыть категорию", ButtonBar.ButtonData.OK_DONE);
+                dialog.getDialogPane().getButtonTypes().addAll(openСategoryButtonType, ButtonType.CANCEL);
+                //проверяем состояние поля ввода
+                //пока оно пустое, кнопка будет оставаться неактивной
+                Node searchButton = dialog.getDialogPane().lookupButton(openСategoryButtonType);
+                searchButton.setDisable(true);
+
+                AtomicBoolean searchOnClickButton = new AtomicBoolean(false);//была ли нажата кнопка открыть категорию
+
+
+                TextField newCategoryField = new TextField();
+                newCategoryField.setPromptText("Категория");
+
+
+                grid.add(new Label("ФИО:"), 0, 0);
+                grid.add(new Label("Стаж c:"), 0, 1);
+                grid.add(new Label("Категории:"), 0, 2);
+                grid.add(new Label("Личные автомобили:"), 0, 3);
+                grid.add(new Label("Новая категория:"), 0, 4);
+
+                Label categoriesLabel = new Label(owners.get(detailsOwnerIndex).driversLicense.getCategories());
+
+                grid.add(new Label(owners.get(detailsOwnerIndex).getNameOfTheOwner()), 1, 0);
+                grid.add(new Label(owners.get(detailsOwnerIndex).getExperience()), 1, 1);
+                grid.add(categoriesLabel, 1, 2);
+                grid.add(new Label(owners.get(detailsOwnerIndex).getPersonalCars()), 1, 3);
+                grid.add(newCategoryField, 1, 4);
+
+
+                newCategoryField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    searchButton.setDisable(newValue.trim().isEmpty());
+                });
+
+
+                dialog.getDialogPane().setContent(grid);
+
+                int detailsOwnerIndexCopy = detailsOwnerIndex;
+                dialog.setResultConverter(dialogButton -> {
+                    if (dialogButton == openСategoryButtonType) {//если нажали "открыть категорию"
+                        if (owners.get(detailsOwnerIndexCopy).openСategory(newCategoryField.getText())) {
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                            alert.setTitle("Подтверждение");
+                            alert.setHeaderText("Категория " + newCategoryField.getText() + " добавлена");
+                            data.AutobaseToFile(data.database);
+                            alert.getButtonTypes().setAll(ButtonType.CLOSE);
+
+                            alert.showAndWait();
+
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                            alert.setTitle("Ошибка");
+                            alert.setHeaderText("Категория " + newCategoryField.getText() + " не существует!");
+
+                            alert.getButtonTypes().setAll(ButtonType.CLOSE);
+
+                            alert.showAndWait();
+                        }
+
+                    }
+
+                    return null;
+                });
+
+                dialog.showAndWait();
+            }
+        }
+
     }
 }
 
